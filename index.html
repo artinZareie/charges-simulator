@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Particles by Artin Zareie</title>
+
+    <link rel="stylesheet" href="./styles/styles.css" />
+  </head>
+
+  <body>
+    <section class="data-section">
+      <div class="data-context">
+        <h1 class="title">Particles by Artin Zareie</h1>
+
+        <div class="records">
+          <form action="javascript:void(0)">
+            <h3>Particles Data</h3>
+
+            <table class="record">
+              <thead>
+                <tr>
+                  <th>Particle ID</th>
+                  <th>Charge</th>
+                  <th>Position</th>
+                </tr>
+              </thead>
+              <tr id="1">
+                <td>
+                  <p>#1</p>
+                </td>
+                <td>
+                  <input value="2e-3" name="charge" type="number" />
+                </td>
+                <td>
+                  <label for="">x: </label>
+                  <input value="0" name="x" style="width: 4vw" type="number" />
+                  <label for="">y: </label>
+                  <input value="0" name="y" style="width: 4vw" type="number" class="" />
+                  <label for="">z: </label>
+                  <input value="0" name="z" style="width: 4vw" type="number" class="" />
+                </td>
+              </tr>
+              <tr id="2">
+                <td>
+                  <p>#2</p>
+                </td>
+                <td>
+                  <input value="-2e-4" name="charge" type="number" />
+                </td>
+                <td>
+                  <label for="">x: </label>
+                  <input value="10" style="width: 4vw" name="x" type="number" />
+                  <label for="">y: </label>
+                  <input value="5" style="width: 4vw" name="y" type="number" class="" />
+                  <label for="">z: </label>
+                  <input value="0" name="z" style="width: 4vw" type="number" class="" />
+                </td>
+              </tr>
+              <!-- <tr id="3">
+                <td>
+                  <p>#3</p>
+                </td>
+                <td>
+                  <input value="1e-8" name="charge" type="number" />
+                </td>
+                <td>
+                  <label for="">x: </label>
+                  <input value="10" style="width: 4vw" name="x" type="number" />
+                  <label for="">y: </label>
+                  <input value="5" style="width: 4vw" name="y" type="number" class="" />
+                  <label for="">z: </label>
+                  <input value="-6" name="z" style="width: 4vw" type="number" class="" />
+                </td>
+              </tr> -->
+              <tfoot>
+                <tr>
+                  <td></td>
+                  <th>
+                    <label for="remover">Removing ID</label>
+                  </th>
+                  <td></td>
+                </tr>
+                <tr style="width: 100%; background-color: red">
+                  <td>
+                    <button id="add_rec">Add Record</button>
+                  </td>
+                  <td>
+                    <input type="number" name="" id="remover" />
+                    <button>Remove Selected Record</button>
+                  </td>
+                  <td>
+                    <button class="animate">Animate</button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="canvas-section">
+    </section>
+
+    <script src="./dist/bundle.js"></script>
+  </body>
+</html>

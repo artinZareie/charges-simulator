@@ -1,0 +1,51 @@
+* { 
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-size: 1.2em;
+    overflow: hidden;
+}
+
+.title {
+    font-size: 2rem;
+}
+
+section {
+    width: 50%;
+    height: 100vh;
+    float: left;
+}
+
+.data-section {
+    background-color: beige;
+}
+
+.data-context {
+    padding-left: 30px;
+    width: 100%;
+    height: 100%;
+}
+
+.inline {
+    float: left;
+    display: inline;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
