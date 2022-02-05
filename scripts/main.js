@@ -3,8 +3,6 @@ import * as formula from "./formula";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import WebGL from "./webgl";
 
-let ID_INC = 3;
-
 function restartScene(scene) {
   while (scene.children.length) {
     scene.remove(scene.children[0]);
@@ -22,10 +20,32 @@ function restartScene(scene) {
 
   const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
   scene.add(light);
+
+  let arrowHelper = new THREE.ArrowHelper(
+    new THREE.Vector3(1, 0, 0),
+    new THREE.Vector3(0, 0, 0),
+    10,
+    0x00ff00
+  );
+  scene.add(arrowHelper);
+  arrowHelper = new THREE.ArrowHelper(
+    new THREE.Vector3(0, 1, 0),
+    new THREE.Vector3(0, 0, 0),
+    10,
+    0x00ff00
+  );
+  scene.add(arrowHelper);
+  arrowHelper = new THREE.ArrowHelper(
+    new THREE.Vector3(0, 0, 1),
+    new THREE.Vector3(0, 0, 0),
+    10,
+    0x00ff00
+  );
+  scene.add(arrowHelper);
 }
 
 (function () {
-  let recordes = [];
+  let records = [];
   let sphere_list = [];
 
   if (WebGL.isWebGLAvailable()) {
@@ -37,10 +57,57 @@ function restartScene(scene) {
       document.querySelector(".canvas-section").clientHeight
     );
 
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      document.querySelector(".canvas-section").clientWidth /
+        document.querySelector(".canvas-section").clientHeight,
+      0.1,
+      1000
+    );
+
+    camera.position.z = 20;
+
+    const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+    scene.add(light);
+
+    let arrowHelper = new THREE.ArrowHelper(
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(0, 0, 0),
+      10,
+      0x00ff00
+    );
+    scene.add(arrowHelper);
+    arrowHelper = new THREE.ArrowHelper(
+      new THREE.Vector3(0, 1, 0),
+      new THREE.Vector3(0, 0, 0),
+      10,
+      0x00ff00
+    );
+    scene.add(arrowHelper);
+    arrowHelper = new THREE.ArrowHelper(
+      new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(0, 0, 0),
+      10,
+      0x00ff00
+    );
+    scene.add(arrowHelper);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+
+    document.querySelector(".canvas-section").appendChild(renderer.domElement);
+
+    renderer.render(scene, camera);
+
     document.querySelector("#add_rec").addEventListener("click", () => {
-      let html = `<tr id="${ID_INC}">
+      const trs = document.querySelectorAll("tbody tr");
+      const last_id = trs[trs.length - 1].id;
+      const regex = /^rec_([0-9]+)$/gm;
+      let m = regex.exec(last_id);
+      m[1] = parseInt(m[1]);
+
+      let html = `<tr id="rec_${m[1] + 1}">
       <td>
-        <p>#${ID_INC}</p>
+        <p>#${m[1] + 1}</p>
       </td>
       <td>
         <input value="-2e-4" name="charge" type="number">
@@ -53,14 +120,22 @@ function restartScene(scene) {
         <label for="">z: </label>
         <input value="0" name="z" style="width: 4vw" type="number" class="">
       </td>
+      <td>
+        <input type="checkbox" name="fixed">
+      </td>
     </tr>`;
 
       document.querySelector("tbody").innerHTML += html;
-      ID_INC++;
+    });
+
+    document.querySelector("#rem_rec").addEventListener("click", function () {
+      document
+        .querySelector(`#rec_${document.querySelector("#remover").value}`)
+        .remove();
     });
 
     document.querySelector(".animate").addEventListener("click", function () {
-      recordes = [];
+      records = [];
       while (scene.children.length) {
         scene.remove(scene.children[0]);
       }
@@ -82,9 +157,7 @@ function restartScene(scene) {
 
       const controls = new OrbitControls(camera, renderer.domElement);
 
-      document
-        .querySelector(".canvas-section")
-        .appendChild(renderer.domElement);
+      renderer.render(scene, camera);
 
       Array.from(document.querySelector("tbody").childNodes).map((element) => {
         if (element.nodeName === "TR") {
@@ -104,16 +177,17 @@ function restartScene(scene) {
           values.position[2] = parseFloat(
             element.querySelector("[name=z]").value
           );
-          recordes.push(values);
+          values.fixed = element.querySelector("[name=fixed]").checked;
+          records.push(values);
         }
       });
 
-      let charges = recordes.map((p) => p.charge);
+      let charges = records.map((p) => p.charge);
 
       let max_charge = Math.max(...charges);
       let min_charge = Math.min(...charges);
 
-      sphere_list = recordes.map((particle) => {
+      sphere_list = records.map((particle) => {
         const geometry = new THREE.SphereGeometry(1, 32, 32);
         const material = new THREE.MeshLambertMaterial({
           color: 0x216ccf,
@@ -159,11 +233,10 @@ function restartScene(scene) {
               formula.vec2vec(sphere_list[i].sphere.position),
               formula.vec2vec(sphere_list[j].sphere.position)
             );
-            console.log(r_vec);
             r_hats[i].push(r_vec);
             let force = formula.Force(
-              recordes[i].charge,
-              recordes[j].charge,
+              records[i].charge,
+              records[j].charge,
               r_vec
             );
             forces[i][0] += force[0];
@@ -202,14 +275,21 @@ function restartScene(scene) {
         let counter = -1;
         sphere_list.forEach((sphere) => {
           counter++;
-          sphere.sphere.position.x += delta[counter][0];
-          sphere.sphere.position.y += delta[counter][1];
-          sphere.sphere.position.z += delta[counter][2];
+          if (!records[counter].fixed) {
+            sphere.sphere.position.x += delta[counter][0];
+            sphere.sphere.position.y += delta[counter][1];
+            sphere.sphere.position.z += delta[counter][2];
+          }
 
-          const arrowHelper = new THREE.ArrowHelper(
-            new THREE.Vector3(...forces[counter]),
+          let arrowHelper = new THREE.ArrowHelper(
+            new THREE.Vector3(
+              ...formula.scalar_product(
+                forces[counter],
+                1 / formula.vector_amplitude(forces[counter])
+              )
+            ),
             sphere.sphere.position,
-            formula.vector_amplitude(forces[counter]) / 10,
+            formula.vector_amplitude(forces[counter]) / 2,
             0xffff00
           );
           scene.add(arrowHelper);
