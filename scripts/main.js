@@ -182,18 +182,32 @@ function restartScene(scene) {
         }
       });
 
-      let charges = records.map((p) => p.charge);
+      let charges = records.map((p) => Math.abs(p.charge));
 
       let max_charge = Math.max(...charges);
       let min_charge = Math.min(...charges);
 
       sphere_list = records.map((particle) => {
+        let emissive = 0x9c72f7;
+        let color = 0x216ccf;
+        if (particle.charge < 0) {
+          emissive = 0xcf2132;
+          color = 0xf772a3;
+        }
+        console.log(
+          (Math.abs(particle.charge) - min_charge) /
+            (max_charge - min_charge) /
+            2 +
+            0.5
+        );
         const geometry = new THREE.SphereGeometry(1, 32, 32);
         const material = new THREE.MeshLambertMaterial({
-          color: 0x216ccf,
-          emissive: 0x9c72f7,
+          color: color,
+          emissive: emissive,
           emissiveIntensity:
-            (particle.charge - min_charge) / (max_charge - min_charge) / 2 +
+            (Math.abs(particle.charge) - min_charge) /
+              (max_charge - min_charge) /
+              2 +
             0.5,
         });
 

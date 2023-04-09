@@ -1,7 +1,7 @@
 import { SeperateDigits } from "./tools";
 
 export const coulomb_constant = 1 / (4 * Math.PI * 8.854e-12);
-export const epsilon = 1e-15;
+export const epsilon = 1e-30;
 
 export function vec2vec(vec) {
   return [vec.x, vec.y, vec.z];
@@ -18,7 +18,6 @@ export function substract_vectors(v1, v2) {
   for (let i = 0; i < v1.length; i++) {
     v3[i] = v1[i] - v2[i];
     if (Math.abs(v3[i]) < epsilon) {
-      console.info("ZEROOOO");
       v3[i] = 0;
     }
   }

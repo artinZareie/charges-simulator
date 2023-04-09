@@ -21,6 +21,7 @@ section {
 
 .data-section {
     background-color: beige;
+    overflow: auto;
 }
 
 .data-context {
